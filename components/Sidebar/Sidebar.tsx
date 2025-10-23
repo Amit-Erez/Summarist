@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "@/components/Sidebar/Sidebar.module.css";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { AiOutlineHome } from "react-icons/ai";
@@ -5,8 +7,18 @@ import { CiBookmark, CiSettings } from "react-icons/ci";
 import { TfiMarkerAlt } from "react-icons/tfi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
+import { usePathname } from "next/navigation";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/store/store";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import { openLogin } from "@/slices/uiLoginSlice";
 
 export default function Sidebar() {
+  const pathname = usePathname();
+  const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <>
       <div
@@ -19,14 +31,22 @@ export default function Sidebar() {
         <div className={styles.sidebar__wrapper}>
           <div className={styles.sidebar__top}>
             <a className={styles["sidebar__link--wrapper"]} href="/for-you">
-              <div className={styles["sidebar__link--line"]}></div>
+              <div
+                className={`${styles["sidebar__link--line"]} ${
+                  pathname === "/for-you" && styles["active--tab"]
+                }`}
+              ></div>
               <div className={styles["sidebar__icon--wrapper"]}>
                 <AiOutlineHome />
               </div>
               <div className={styles["sidebar__link--text"]}>For you</div>
             </a>
             <a className={styles["sidebar__link--wrapper"]} href="/library">
-              <div className={styles["sidebar__link--line"]}></div>
+              <div
+                className={`${styles["sidebar__link--line"]} ${
+                  pathname === "/library" && styles["active--tab"]
+                }`}
+              ></div>
               <div className={styles["sidebar__icon--wrapper"]}>
                 <CiBookmark />
               </div>
@@ -53,7 +73,11 @@ export default function Sidebar() {
           </div>
           <div className={styles.sidebar__bottom}>
             <a className={styles["sidebar__link--wrapper"]} href="/settings">
-              <div className={styles["sidebar__link--line"]}></div>
+              <div
+                className={`${styles["sidebar__link--line"]} ${
+                  pathname === "/settings" && styles["active--tab"]
+                }`}
+              ></div>
               <div className={styles["sidebar__icon--wrapper"]}>
                 <CiSettings />
               </div>
@@ -75,7 +99,9 @@ export default function Sidebar() {
               <div className={styles["sidebar__icon--wrapper"]}>
                 <MdLogout />
               </div>
-              <div className={styles["sidebar__link--text"]}>Logout</div>
+                <div className={styles["sidebar__link--text"]} 
+                onClick={() => dispatch(openLogin())}
+                >Login</div>
             </div>
           </div>
         </div>

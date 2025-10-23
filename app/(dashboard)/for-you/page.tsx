@@ -1,4 +1,4 @@
-import styles from "@/app/(dashboard)/for-you/Foryou.module.css"
+import styles from "@/app/(dashboard)/for-you/foryou.module.css"
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { AiOutlineHome } from "react-icons/ai";
 import { CiBookmark, CiSettings } from "react-icons/ci";
