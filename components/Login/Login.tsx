@@ -7,8 +7,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { closeLogin } from "@/slices/uiLoginSlice";
 import { handleAuth } from "@/utilities/handleAuth";
-import { setUser } from "@/slices/userSlice";
-import { store } from "@/store/store";
 import type { RootState } from "@/store/store";
 import type { AppDispatch } from "@/store/store";
 import {
@@ -27,12 +25,11 @@ import { useState } from "react";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
+  const [reset, setReset] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
-  const [mode, setMode] = useState<"login" | "signup" | "forgot" | "reset">(
-    "login"
-  );
   const router = useRouter();
 
   const handleGuestLogin = async () => {
@@ -127,9 +124,8 @@ export default function Login() {
         alert("Please enter your email address.");
         return;
       }
-
       await sendPasswordResetEmail(auth, email);
-      setMode("reset");
+      setReset(true);
     } catch (error: any) {
       console.error("Password reset failed:", error);
       alert(error.message);
@@ -145,6 +141,7 @@ export default function Login() {
         if (e.target === e.currentTarget) {
           dispatch(closeLogin());
           setMode("login");
+          setReset(false);
         }
       }}
     >
@@ -241,6 +238,11 @@ export default function Login() {
           <>
             <div className={styles.auth__content}>
               <div className={styles.auth__title}>Reset your password</div>
+              {reset === true && (
+                <div className={styles.auth__success}>
+                  Your reset email has been sent!
+                </div>
+              )}
               <form className={styles["auth__main--form"]}>
                 <input
                   className={styles["auth__main--input"]}
@@ -264,6 +266,7 @@ export default function Login() {
                 setEmail("");
                 setPassword("");
                 setMode("login");
+                setReset(false);
               }}
             >
               Go to login
@@ -273,6 +276,7 @@ export default function Login() {
               onClick={() => {
                 dispatch(closeLogin());
                 setMode("login");
+                setReset(false);
               }}
             >
               <RiCloseLargeFill />
@@ -331,51 +335,6 @@ export default function Login() {
               }}
             >
               Already have an account?
-            </button>
-            <div
-              className={styles["auth__close--btn"]}
-              onClick={() => {
-                dispatch(closeLogin());
-                setMode("login");
-              }}
-            >
-              <RiCloseLargeFill />
-            </div>
-          </>
-        )}
-        {mode === "reset" && (
-          <>
-            <div className={styles.auth__content}>
-              <div className={styles.auth__title}>Reset your password</div>
-              <div className={styles.auth__success}>
-                Your reset email has been sent!
-              </div>
-              <form className={styles["auth__main--form"]}>
-                <input
-                  className={styles["auth__main--input"]}
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <button
-                  className={styles.btn}
-                  type="button"
-                  onClick={() => handlePasswordReset(email)}
-                >
-                  <span>Send reset password link</span>
-                </button>
-              </form>
-            </div>
-            <button
-              className={styles["auth__switch--btn"]}
-              onClick={() => {
-                setEmail("");
-                setPassword("");
-                setMode("login");
-              }}
-            >
-              Go to login
             </button>
             <div
               className={styles["auth__close--btn"]}
