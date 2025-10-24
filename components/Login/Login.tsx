@@ -6,19 +6,33 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { closeLogin } from "@/slices/uiLoginSlice";
-import { useState } from "react";
+import { handleAuth } from "@/utilities/handleAuth";
+import { setUser } from "@/slices/userSlice";
+import { store } from "@/store/store";
 import type { RootState } from "@/store/store";
 import type { AppDispatch } from "@/store/store";
-import { signInAnonymously, updateProfile } from "firebase/auth";
+import {
+  signInAnonymously,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth } from "@/firebase/firebase";
-import { setUser } from "@/slices/userSlice";
-import {store} from "@/store/store"
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
-  const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "forgot" | "reset">(
+    "login"
+  );
   const router = useRouter();
 
   const handleGuestLogin = async () => {
@@ -26,23 +40,99 @@ export default function Login() {
       const result = await signInAnonymously(auth);
       const user = result.user;
       await updateProfile(user, { displayName: "Guest User" });
-      const fakeEmail = "amit@summarist.com";
 
-      dispatch(
-        setUser({
+      handleAuth(
+        {
           uid: user.uid,
-          email: fakeEmail,
+          email: "amit@summarist.com",
           plan: "premium",
-          isLoggedIn: true,
-        })
+        },
+        dispatch
       );
 
-      localStorage.setItem("guestProfile", JSON.stringify(user));
-      console.log("Guest user signed in:", store.getState().user);
-      dispatch(closeLogin());
-      router.push("/for-you")
+      router.push("/for-you");
     } catch (error) {
       console.log("Guest login failed:", error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      handleAuth(
+        {
+          uid: user.uid,
+          email: user.email,
+          plan: "basic",
+        },
+        dispatch
+      );
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
+  };
+
+  const handleEmailLogin = async (email: string, password: string) => {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+
+      handleAuth(
+        {
+          uid: user.uid,
+          email: user.email,
+          plan: "basic",
+        },
+        dispatch
+      );
+
+      router.push("/for-you");
+    } catch (error: any) {
+      console.error("Email login failed:", error);
+      alert(error.message);
+    }
+  };
+
+  const handleEmailSignup = async (email: string, password: string) => {
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = result.user;
+
+      handleAuth(
+        {
+          uid: user.uid,
+          email: user.email,
+          plan: "basic",
+        },
+        dispatch
+      );
+
+      router.push("/for-you");
+    } catch (error: any) {
+      console.error("Signup failed:", error);
+      alert(error.message);
+    }
+  };
+
+  const handlePasswordReset = async (email: string) => {
+    try {
+      if (!email) {
+        alert("Please enter your email address.");
+        return;
+      }
+
+      await sendPasswordResetEmail(auth, email);
+      setMode("reset");
+    } catch (error: any) {
+      console.error("Password reset failed:", error);
+      alert(error.message);
     }
   };
 
@@ -51,7 +141,7 @@ export default function Login() {
   return (
     <div
       className={styles.auth__wrapper}
-      onClick={(e) => {
+      onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           dispatch(closeLogin());
           setMode("login");
@@ -79,6 +169,7 @@ export default function Login() {
               </div>
               <button
                 className={`${styles.btn} ${styles["google__btn--wrapper"]}`}
+                onClick={handleGoogleLogin}
               >
                 <figure className={styles["google__icon--mask"]}>
                   <img src="/assets/google.png" alt="google icon" />
@@ -96,26 +187,42 @@ export default function Login() {
                   className={styles["auth__main--input"]}
                   type="email"
                   placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                   className={styles["auth__main--input"]}
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className={styles.btn}>
+                <button
+                  className={styles.btn}
+                  type="button"
+                  onClick={() => handleEmailLogin(email, password)}
+                >
                   <span>Login</span>
                 </button>
               </form>
             </div>
             <div
               className={styles["auth__forgot--password"]}
-              onClick={() => setMode("forgot")}
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+                setMode("forgot");
+              }}
             >
               Forgot your password?
             </div>
             <button
               className={styles["auth__switch--btn"]}
-              onClick={() => setMode("signup")}
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+                setMode("signup");
+              }}
             >
               Don't have an account?
             </button>
@@ -139,15 +246,25 @@ export default function Login() {
                   className={styles["auth__main--input"]}
                   type="email"
                   placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-                <button className={styles.btn}>
+                <button
+                  className={styles.btn}
+                  type="button"
+                  onClick={() => handlePasswordReset(email)}
+                >
                   <span>Send reset password link</span>
                 </button>
               </form>
             </div>
             <button
               className={styles["auth__switch--btn"]}
-              onClick={() => setMode("login")}
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+                setMode("login");
+              }}
             >
               Go to login
             </button>
@@ -165,9 +282,10 @@ export default function Login() {
         {mode === "signup" && (
           <>
             <div className={styles.auth__content}>
-              <div className={styles.auth__title}>Log in to Summarist</div>
+              <div className={styles.auth__title}>Sign up to Summarist</div>
               <button
                 className={`${styles.btn} ${styles["google__btn--wrapper"]}`}
+                onClick={handleGoogleLogin}
               >
                 <figure className={styles["google__icon--mask"]}>
                   <img src="/assets/google.png" alt="google icon" />
@@ -185,22 +303,79 @@ export default function Login() {
                   className={styles["auth__main--input"]}
                   type="email"
                   placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                   className={styles["auth__main--input"]}
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className={styles.btn}>
+                <button
+                  className={styles.btn}
+                  type="button"
+                  onClick={() => handleEmailSignup(email, password)}
+                >
                   <span>Sign up</span>
                 </button>
               </form>
             </div>
             <button
               className={styles["auth__switch--btn"]}
-              onClick={() => setMode("login")}
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+                setMode("login");
+              }}
             >
               Already have an account?
+            </button>
+            <div
+              className={styles["auth__close--btn"]}
+              onClick={() => {
+                dispatch(closeLogin());
+                setMode("login");
+              }}
+            >
+              <RiCloseLargeFill />
+            </div>
+          </>
+        )}
+        {mode === "reset" && (
+          <>
+            <div className={styles.auth__content}>
+              <div className={styles.auth__title}>Reset your password</div>
+              <div className={styles.auth__success}>
+                Your reset email has been sent!
+              </div>
+              <form className={styles["auth__main--form"]}>
+                <input
+                  className={styles["auth__main--input"]}
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <button
+                  className={styles.btn}
+                  type="button"
+                  onClick={() => handlePasswordReset(email)}
+                >
+                  <span>Send reset password link</span>
+                </button>
+              </form>
+            </div>
+            <button
+              className={styles["auth__switch--btn"]}
+              onClick={() => {
+                setEmail("");
+                setPassword("");
+                setMode("login");
+              }}
+            >
+              Go to login
             </button>
             <div
               className={styles["auth__close--btn"]}

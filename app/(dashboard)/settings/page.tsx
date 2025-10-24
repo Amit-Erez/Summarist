@@ -8,6 +8,26 @@ export default function Settings() {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
 
+  if (user.isLoading) {
+    return (
+      <>
+        <div className={styles.container}>
+          <div className={styles.row}>
+            <div className={`${styles.section__title} ${styles.page__title}`}>
+              Settings
+            </div>
+            <div className={styles["setting__content"]}>
+              <div className={styles["settings__sub--title-skeleton"]}></div>
+            </div>
+            <div className={styles["setting__content"]}>
+              <div className={styles["settings__sub--title-skeleton"]}></div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.row}>
@@ -15,20 +35,18 @@ export default function Settings() {
           Settings
         </div>
         {user.isLoggedIn ? (
-            <>
-          <div className={styles["setting__content"]}>
-            <div className={styles["settings__sub--title"]}>
-              Your Subscription plan
+          <>
+            <div className={styles["setting__content"]}>
+              <div className={styles["settings__sub--title"]}>
+                Your Subscription plan
+              </div>
+              <div className={styles.settings__text}>{user.plan}</div>
             </div>
-            <div className={styles.settings__text}>{user.plan}</div>
-          </div>
-          <div className={styles["setting__content"]}>
-            <div className={styles["settings__sub--title"]}>
-              Email
+            <div className={styles["setting__content"]}>
+              <div className={styles["settings__sub--title"]}>Email</div>
+              <div className={styles.settings__text}>{user.email}</div>
             </div>
-            <div className={styles.settings__text}>{user.email}</div>
-          </div>
-            </>
+          </>
         ) : (
           <div className={styles["settings__login--wrapper"]}>
             <img src="/assets/login.png" alt="login image" />

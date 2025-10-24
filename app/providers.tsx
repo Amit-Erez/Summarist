@@ -4,9 +4,10 @@ import { Provider, useDispatch } from "react-redux";
 import { store } from "@/store/store";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
-import { setUser, clearUser } from "@/slices/userSlice";
+import { setUser, clearUser, finishLoading } from "@/slices/userSlice";
 import { useEffect } from "react";
 import { AppDispatch } from "@/store/store";
+
 
 function AuthListener() {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,29 +15,38 @@ function AuthListener() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-
-        const stored = localStorage.getItem("guestProfile");
-        const guest = stored ? JSON.parse(stored) : null;
+        const stored = localStorage.getItem("authUser");
+        const storedUser = stored ? JSON.parse(stored) : null;
 
         dispatch(
           setUser({
             uid: user.uid,
-            email: user.email ?? guest?.email ?? null,
-            plan: guest?.plan ?? null,
+            email: storedUser.email ?? user?.email ?? null,
+            plan: storedUser?.plan ?? null,
             isLoggedIn: true,
           })
         );
       } else {
-        dispatch(clearUser())
+        dispatch(clearUser());
       }
     });
 
-    return () => unsubscribe();
+    const timeout = setTimeout(() => dispatch(finishLoading()), 2000);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
   }, [dispatch]);
 
   return null;
 }
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <Provider store={store}><AuthListener />{children}</Provider>;
+  return (
+    <Provider store={store}>
+      <AuthListener />
+      {children}
+    </Provider>
+  );
 }
