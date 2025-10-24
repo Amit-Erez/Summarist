@@ -8,16 +8,32 @@ import { TfiMarkerAlt } from "react-icons/tfi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
 import { usePathname } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store/store";
-import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import { openLogin } from "@/slices/uiLoginSlice";
+import { auth } from "@/firebase/firebase";
+import { signOut } from "firebase/auth";
+import { clearUser } from "@/slices/userSlice";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+
+  const handleAuthClick = async () => {
+    if (user.isLoggedIn) {
+      try {
+        await signOut(auth);
+        dispatch(clearUser());
+        console.log("User logged out");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+    } else {
+      dispatch(openLogin());
+    }
+  };
 
   return (
     <>
@@ -99,9 +115,12 @@ export default function Sidebar() {
               <div className={styles["sidebar__icon--wrapper"]}>
                 <MdLogout />
               </div>
-                <div className={styles["sidebar__link--text"]} 
-                onClick={() => dispatch(openLogin())}
-                >Login</div>
+              <div
+                className={styles["sidebar__link--text"]}
+                onClick={handleAuthClick}
+              >
+                {user.isLoggedIn ? "Logout" : "Login"}
+              </div>
             </div>
           </div>
         </div>

@@ -9,11 +9,42 @@ import { closeLogin } from "@/slices/uiLoginSlice";
 import { useState } from "react";
 import type { RootState } from "@/store/store";
 import type { AppDispatch } from "@/store/store";
+import { signInAnonymously, updateProfile } from "firebase/auth";
+import { auth } from "@/firebase/firebase";
+import { setUser } from "@/slices/userSlice";
+import {store} from "@/store/store"
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
   const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
+  const router = useRouter();
+
+  const handleGuestLogin = async () => {
+    try {
+      const result = await signInAnonymously(auth);
+      const user = result.user;
+      await updateProfile(user, { displayName: "Guest User" });
+      const fakeEmail = "amit@summarist.com";
+
+      dispatch(
+        setUser({
+          uid: user.uid,
+          email: fakeEmail,
+          plan: "premium",
+          isLoggedIn: true,
+        })
+      );
+
+      localStorage.setItem("guestProfile", JSON.stringify(user));
+      console.log("Guest user signed in:", store.getState().user);
+      dispatch(closeLogin());
+      router.push("/for-you")
+    } catch (error) {
+      console.log("Guest login failed:", error);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -23,7 +54,7 @@ export default function Login() {
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           dispatch(closeLogin());
-          setMode("login")
+          setMode("login");
         }
       }}
     >
@@ -34,6 +65,7 @@ export default function Login() {
               <div className={styles.auth__title}>Log in to Summarist</div>
               <button
                 className={`${styles.btn} ${styles["guest__btn--wrapper"]}`}
+                onClick={handleGuestLogin}
               >
                 <figure
                   className={`${styles["google__icon--mask"]} ${styles["guest__icon--mask"]}`}
@@ -75,17 +107,24 @@ export default function Login() {
                 </button>
               </form>
             </div>
-            <div className={styles["auth__forgot--password"]} 
-            onClick={() => setMode("forgot")}>
+            <div
+              className={styles["auth__forgot--password"]}
+              onClick={() => setMode("forgot")}
+            >
               Forgot your password?
             </div>
-            <button className={styles["auth__switch--btn"]} 
-            onClick={() => setMode("signup")}>
+            <button
+              className={styles["auth__switch--btn"]}
+              onClick={() => setMode("signup")}
+            >
               Don't have an account?
             </button>
             <div
               className={styles["auth__close--btn"]}
-              onClick={() => {dispatch(closeLogin()); setMode("login")}}
+              onClick={() => {
+                dispatch(closeLogin());
+                setMode("login");
+              }}
             >
               <RiCloseLargeFill />
             </div>
@@ -106,11 +145,18 @@ export default function Login() {
                 </button>
               </form>
             </div>
-            <button className={styles["auth__switch--btn"]} 
-            onClick={() => setMode("login")}>Go to login</button>
+            <button
+              className={styles["auth__switch--btn"]}
+              onClick={() => setMode("login")}
+            >
+              Go to login
+            </button>
             <div
               className={styles["auth__close--btn"]}
-              onClick={() => {dispatch(closeLogin()); setMode("login")}}
+              onClick={() => {
+                dispatch(closeLogin());
+                setMode("login");
+              }}
             >
               <RiCloseLargeFill />
             </div>
@@ -150,13 +196,18 @@ export default function Login() {
                 </button>
               </form>
             </div>
-            <button className={styles["auth__switch--btn"]} 
-            onClick={() => setMode("login")}>
+            <button
+              className={styles["auth__switch--btn"]}
+              onClick={() => setMode("login")}
+            >
               Already have an account?
             </button>
             <div
               className={styles["auth__close--btn"]}
-              onClick={() => {dispatch(closeLogin()); setMode("login")}}
+              onClick={() => {
+                dispatch(closeLogin());
+                setMode("login");
+              }}
             >
               <RiCloseLargeFill />
             </div>
