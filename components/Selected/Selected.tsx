@@ -3,15 +3,17 @@ import { FaPlayCircle } from "react-icons/fa";
 import type { Book } from "@/types/book";
 
 export default async function Selected() {
-
-  const res = await fetch("https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected");
-  const data: Book[] = await res.json()
+  const res = await fetch(
+    "https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected",
+    { next: { revalidate: 0 } }
+  );
+  const data: Book[] = await res.json();
   const book: Book = data[0];
 
   return (
-    <> 
+    <>
       <div className={styles["for-you__title"]}>Selected just for you</div>
-      <a className={styles.selected__book} href={`/books/${book.id}`}>
+      <a className={styles.selected__book} href={`/book/${book.id}`}>
         <div className={styles["selected__book--sub-title"]}>
           {book.subTitle}
         </div>
@@ -25,9 +27,7 @@ export default async function Selected() {
             />
           </figure>
           <div className={styles["selected__book--text"]}>
-            <div className={styles["selected__book--title"]}>
-              {book.title}
-            </div>
+            <div className={styles["selected__book--title"]}>{book.title}</div>
             <div className={styles["selected__book--author"]}>
               {book.author}
             </div>
@@ -44,4 +44,14 @@ export default async function Selected() {
       </a>
     </>
   );
+}
+
+export function SelectedSkeleton() {
+  return (
+    <>
+    <div className={styles["for-you__title"]}>Selected just for you</div>
+    <div className={styles["selected__book--skeleton"]}>
+    </div>
+    </>
+  )
 }

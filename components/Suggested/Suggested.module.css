@@ -37,6 +37,15 @@
   margin-bottom: 8px;
 }
 
+.recommended__book--title-skl {
+  width: 170px;
+  height: 19px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #f0f0f08e 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
 .book__image--wrapper {
   height: 140px;
   width: 140px;
@@ -54,11 +63,28 @@
   height: 100%;
 }
 
+.book__image--skeleton {
+  width: 172px;
+  height: 172px;
+  background: linear-gradient(90deg, #f0f0f08e 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
 .recommended__book--author {
   font-size: 14px;
   color: #6b757b;
   font-weight: 300;
   margin-bottom: 8px;
+}
+
+.recommended__book--author-skl {
+  width: 120px;
+  height: 17px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #f0f0f08e 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 .recommended__book--sub-title {
@@ -67,10 +93,28 @@
   margin-bottom: 8px;
 }
 
+.recommended__book--sub-title-skl {
+  width: 160px;
+  height: 34px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #f0f0f08e 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
 .recommended__book--details-wrapper {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.recommended__book--details-wrapper-skl {
+  width: 100px;
+  height: 17px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #f0f0f08e 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 .recommended__book--details {
@@ -91,4 +135,13 @@
 .recommended__book--details-icon svg {
   width: 90%;
   height: 90%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

@@ -10,24 +10,28 @@ export default function Searchbar() {
   const [query, setQuery] = useState("");
   const debouncedQuery = searchBounce(query, 300);
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
+
 
   useEffect(() => {
     if (!debouncedQuery) {
       setResults([]);
+      setHasFetched(false);
       return;
     }
     const fetchData = async () => {
       setLoading(true);
+      setHasFetched(false);
       const res = await fetch(
         `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${debouncedQuery}`
       );
       const data = await res.json();
       setResults(data);
-
+      setHasFetched(true);
       setTimeout(() => {
-        setLoading(false)
-      },300)
+        setLoading(false);
+      }, 300);
     };
 
     fetchData();
@@ -54,51 +58,60 @@ export default function Searchbar() {
           </div>
           <div className={styles["sidebar__toggle--btn"]}></div>
         </div>
-        { results.length > 0 && 
-        <div className={styles["search__books--wrapper"]}>
-          {
-            results.map((book: Book) => (
-              loading ? 
-                  <div className={styles["search__book--skeleton"]}>
-                      <div></div>
-                  </div>
-                :
+        {results.length > 0 && (
+          <div className={styles["search__books--wrapper"]}>
+            {results.map((book: Book) =>
+              loading ? (
+                <div className={styles["search__book--skeleton"]}>
+                  <div></div>
+                </div>
+              ) : (
                 <>
-                <a
-                  key={book.id}
-                  className={styles["search__book--link"]}
-                  href={`/books/${book.id}`}
-                >
-                  <figure className={styles["book__image--wrapper"]}>
-                    <img
-                      className={styles.book__image}
-                      src={book.imageLink}
-                      alt=""
-                    />
-                  </figure>
-                  <div>
-                    <div className={styles["search__book--title"]}>
-                      {book.title}
-                    </div>
-                    <div className={styles["search__book--author"]}>
-                      {book.author}
-                    </div>
-                    <div className={styles["search__book--duration"]}>
-                      <div className={styles["recommended__book--details"]}>
-                        <div className={styles["recommnded__book--details-icon"]}>
-                          <FaPlayCircle />
-                        </div>
-                        <div className={styles["recommnded__book--details-text"]}>
-                          03:24
+                  <a
+                    key={book.id}
+                    className={styles["search__book--link"]}
+                    href={`/books/${book.id}`}
+                  >
+                    <figure className={styles["book__image--wrapper"]}>
+                      <img
+                        className={styles.book__image}
+                        src={book.imageLink}
+                        alt=""
+                      />
+                    </figure>
+                    <div>
+                      <div className={styles["search__book--title"]}>
+                        {book.title}
+                      </div>
+                      <div className={styles["search__book--author"]}>
+                        {book.author}
+                      </div>
+                      <div className={styles["search__book--duration"]}>
+                        <div className={styles["recommended__book--details"]}>
+                          <div
+                            className={styles["recommnded__book--details-icon"]}
+                          >
+                            <FaPlayCircle />
+                          </div>
+                          <div
+                            className={styles["recommnded__book--details-text"]}
+                          >
+                            03:24
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
                 </>
-            ))}
-        </div>
-        }
+              )
+            )}
+          </div>
+        )}
+        {!loading && hasFetched && results.length === 0 && (
+          <div className={styles["search__books--wrapper"]}>
+            <p>No books found</p>
+          </div>
+        )}
       </div>
     </div>
   );
