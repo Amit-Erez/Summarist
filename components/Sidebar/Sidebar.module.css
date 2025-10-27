@@ -156,6 +156,8 @@
     border-bottom: 3px solid #2bd97c
 }
 
+
+
 @media (max-width: 768px) {
     .sidebar {
         transform:translateX(-100%)

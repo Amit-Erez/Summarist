@@ -76,6 +76,11 @@
     background-color: #20ba68;
 }
 
+.btn.settings__upgrade--btn {
+    width: -moz-fit-content;
+    width: fit-content;
+}
+
 .setting__content {
     display: flex;
     flex-direction: column;

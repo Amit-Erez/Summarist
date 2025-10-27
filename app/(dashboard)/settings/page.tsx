@@ -41,6 +41,7 @@ export default function Settings() {
                 Your Subscription plan
               </div>
               <div className={styles.settings__text}>{user.plan}</div>
+              <a className={`${styles.btn} ${styles["settings__upgrade--btn"]}`} href="/choose-plan">Upgrade to Premium</a>
             </div>
             <div className={styles["setting__content"]}>
               <div className={styles["settings__sub--title"]}>Email</div>

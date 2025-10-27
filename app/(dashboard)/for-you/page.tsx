@@ -1,9 +1,7 @@
 import styles from "@/app/(dashboard)/for-you/foryou.module.css";
-import Recommended, {
-  RecommendedSkeleton,
-} from "@/components/Recommended/Recommended";
+import Recommended from "@/components/Recommended/Recommended";
 import Selected, { SelectedSkeleton } from "@/components/Selected/Selected";
-import Suggested, { SuggestedSkeleton } from "@/components/Suggested/Suggested";
+import Suggested from "@/components/Suggested/Suggested";
 import { Suspense } from "react";
 
 export default function Foryou() {
@@ -15,12 +13,8 @@ export default function Foryou() {
             <Suspense fallback={<SelectedSkeleton />}>
               <Selected />
             </Suspense>
-            <Suspense fallback={<RecommendedSkeleton />}>
               <Recommended />
-            </Suspense>
-            <Suspense fallback={<SuggestedSkeleton />}>
               <Suggested />
-            </Suspense>
           </div>
         </div>
       </div>

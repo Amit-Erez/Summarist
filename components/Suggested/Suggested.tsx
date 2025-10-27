@@ -1,7 +1,6 @@
 import styles from "./Suggested.module.css";
-import { LuClock3 } from "react-icons/lu";
-import { FaRegStar } from "react-icons/fa";
 import type { Book } from "@/types/book";
+import BookCard from "../BookCard/BookCard";
 
 export default async function Suggested() {
   const res = await fetch(
@@ -16,42 +15,7 @@ export default async function Suggested() {
         <div className={styles["for-you__sub--title"]}>Browse those books</div>
         <div className={styles["for-you__recommended--books"]}>
           {books.slice(0, 5).map((book) => (
-            <a key={book.id} className={styles["for-you__recommended--books-link"]} href={`/book/${book.id}`}>
-              <figure className={styles["book__img--wrapper"]}>
-                <img
-                  className={styles.book__image}
-                  src={book.imageLink}
-                  alt="book"
-                />
-              </figure>
-              <div className={styles["recommended__book--title"]}>
-                {book.title}
-              </div>
-              <div className={styles["recommended__book--author"]}>
-                {book.author}
-              </div>
-              <div className={styles["recommended__book--sub-title"]}>
-                {book.subTitle}
-              </div>
-              <div className={styles["recommended__book--details-wrapper"]}>
-                <div className={styles["recommended__book--details"]}>
-                  <div className={styles["recommended__book--details-icon"]}>
-                    <LuClock3 />
-                  </div>
-                  <div className={styles["recommended__book--details-text"]}>
-                    03:24
-                  </div>
-                </div>
-                <div className={styles["recommended__book--details"]}>
-                  <div className={styles["recommended__book--details-icon"]}>
-                    <FaRegStar />
-                  </div>
-                  <div className={styles["recommended__book--details-text"]}>
-                    {book.averageRating}
-                  </div>
-                </div>
-              </div>
-            </a>
+            <BookCard book={book} key={book.id}/>
           ))}
         </div>
       </div>
@@ -59,34 +23,3 @@ export default async function Suggested() {
   );
 }
 
-export function SuggestedSkeleton() {
-  return (
-    <>
-    <div className={styles["for-you__title"]}>Suggested Books
-</div>
-        <div className={styles["for-you__sub--title"]}>
-          Browse those books
-        </div>
-    <div className={styles["for-you__recommended--books"]}>
-      {new Array(5).fill(0).map((_, index) => 
-          <div key={index} className={styles["for-you__recommended--books-link"]}>
-            <div className={styles["book__img--wrapper"]}>
-              <div
-                className={styles["book__image--skeleton"]}
-              />
-            </div>
-            <div className={styles["recommended__book--title-skl"]}>
-            </div>
-            <div className={styles["recommended__book--author-skl"]}>
-            </div>
-            <div className={styles["recommended__book--sub-title-skl"]}>
-            </div>
-            <div className={styles["recommended__book--details-wrapper-skl"]}>
-              <div></div>
-            </div>
-          </div>
-          )}
-    </div>
-    </>
-  )
-}
