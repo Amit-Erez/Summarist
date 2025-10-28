@@ -16,6 +16,7 @@ import { openLogin } from "@/slices/uiLoginSlice";
 import { auth } from "@/firebase/firebase";
 import { signOut } from "firebase/auth";
 import { clearUser } from "@/slices/userSlice";
+import { resizeSmall, resizeMedium, resizeLarge, resizeXlarge } from "@/slices/fontSizeSlice";
 import { useState } from "react";
 
 export default function Sidebar() {
@@ -50,7 +51,7 @@ export default function Sidebar() {
         <div className={styles.sidebar__logo}>
           <img className={styles.nav__img} src="/assets/logo.png" alt="logo" />
         </div>
-        <div className={styles.sidebar__wrapper}>
+        <div className={`${styles.sidebar__wrapper} ${isPlayerPage ? styles.player : null}`}>
           <div className={styles.sidebar__top}>
             <a className={styles["sidebar__link--wrapper"]} href="/for-you">
               <div
@@ -104,7 +105,10 @@ export default function Sidebar() {
                   fontActive === "small" &&
                   styles["sidebar__font--size-icon--active"]
                 }`}
-                onClick={() => setFontActive("small")}
+                onClick={() => {
+                  setFontActive("small");
+                  dispatch(resizeSmall())
+                }}
               >
                 <RiFontSize
                   className={styles["sidebar__font--size-icon-small"]}
@@ -117,7 +121,10 @@ export default function Sidebar() {
                   fontActive === "medium" &&
                   styles["sidebar__font--size-icon--active"]
                 }`}
-                onClick={() => setFontActive("medium")}
+                onClick={() => {
+                  setFontActive("medium");
+                  dispatch(resizeMedium())
+                }}
               >
                 <RiFontSize
                   className={styles["sidebar__font--size-icon-medium"]}
@@ -130,7 +137,10 @@ export default function Sidebar() {
                   fontActive === "large" &&
                   styles["sidebar__font--size-icon--active"]
                 }`}
-                onClick={() => setFontActive("large")}
+                onClick={() => {
+                  setFontActive("large");
+                  dispatch(resizeLarge())
+                }}
               >
                 <RiFontSize
                   className={styles["sidebar__font--size-icon-large"]}
@@ -143,7 +153,10 @@ export default function Sidebar() {
                   fontActive === "xlarge" &&
                   styles["sidebar__font--size-icon--active"]
                 }`}
-                onClick={() => setFontActive("xlarge")}
+                onClick={() => {
+                  setFontActive("xlarge");
+                  dispatch(resizeXlarge())
+                }}
               >
                 <RiFontSize
                   className={styles["sidebar__font--size-icon-xlarge"]}

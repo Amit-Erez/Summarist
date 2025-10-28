@@ -3,8 +3,7 @@
 import styles from "./Login.module.css";
 import { FaUser } from "react-icons/fa";
 import { RiCloseLargeFill } from "react-icons/ri";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { closeLogin } from "@/slices/uiLoginSlice";
 import { handleAuth } from "@/utilities/handleAuth";
 import type { RootState } from "@/store/store";
