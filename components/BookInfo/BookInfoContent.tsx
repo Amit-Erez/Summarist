@@ -2,6 +2,7 @@
 
 import styles from "./BookInfoContent.module.css";
 import type { Book } from "@/types/book";
+import { bookDurations } from "@/public/bookDurations"
 import { LuClock3 } from "react-icons/lu";
 import { FaRegStar } from "react-icons/fa";
 import { HiOutlineMicrophone } from "react-icons/hi";
@@ -12,6 +13,7 @@ import BookInfoLoad from "./BookInfoLoad";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentBook } from "@/slices/bookSlice";
+import { openLogin } from "@/slices/uiLoginSlice";
 import type { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 
@@ -19,18 +21,37 @@ export default function BookInfoContent({ book }: { book: Book }) {
   const [loading, setLoading] = useState(true);
 
   const isPlan = useSelector((state: RootState) => state.user.plan);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const seconds = bookDurations[book.id];
+  const timeFormatted = seconds ? formatTime(seconds) : "00:00";
+
+  function formatTime(seconds: number): string {
+  if (isNaN(seconds)) return "00:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
 
   function Route() {
     localStorage.setItem("currentBook", JSON.stringify(book));
     dispatch(setCurrentBook(book));
 
-    if (isPlan === "premium") {
-      router.replace(`/player/${book.id}`);
-    } else {
-      router.replace("/choose-plan");
-    }
+     if (!isLoggedIn) {
+    dispatch(openLogin());
+    return;
+  }
+
+  // 2️⃣ If logged in but still basic → redirect to upgrade
+  if (isPlan === "basic" || !isPlan) {
+    router.push("/choose-plan");
+    return;
+  }
+
+  // 3️⃣ If premium or premium plus → go to player
+  router.push(`/player/${book.id}`);
   }
 
   useEffect(() => {
@@ -63,7 +84,7 @@ export default function BookInfoContent({ book }: { book: Book }) {
               <div className={styles["inner__book--icon"]}>
                 <LuClock3 />
               </div>
-              <div className={styles["inner__book--duration"]}>03:24</div>
+              <div className={styles["inner__book--duration"]}>{timeFormatted}</div>
             </div>
             <div className={styles["inner__book--description"]}>
               <div className={styles["inner__book--icon"]}>
@@ -82,19 +103,19 @@ export default function BookInfoContent({ book }: { book: Book }) {
           </div>
         </div>
         <div className={styles["inner__book--read-btn-wrapper"]}>
-          <button className={styles["inner__book--read-btn"]}>
+          <button className={styles["inner__book--read-btn"]} onClick={Route}>
             <div className={styles["inner__book--read-icon"]}>
               <LuBookOpenText />
             </div>
-            <div className={styles["inner__book--read-text"]} onClick={Route}>
+            <div className={styles["inner__book--read-text"]}>
               Read
             </div>
           </button>
-          <button className={styles["inner__book--read-btn"]}>
+          <button className={styles["inner__book--read-btn"]} onClick={Route}>
             <div className={styles["inner__book--read-icon"]}>
               <HiOutlineMicrophone />
             </div>
-            <div className={styles["inner__book--read-text"]} onClick={Route}>
+            <div className={styles["inner__book--read-text"]}>
               Listen
             </div>
           </button>

@@ -6,6 +6,7 @@ interface UserState {
   plan: string | null;
   isLoggedIn: boolean;
   isLoading: boolean;
+  isPlanLoading: boolean
 }
 
 const initialState: UserState = {
@@ -14,6 +15,7 @@ const initialState: UserState = {
   plan: null,
   isLoggedIn: false,
   isLoading: true,
+  isPlanLoading: true
 };
 
 export const userSlice = createSlice({
@@ -29,8 +31,11 @@ export const userSlice = createSlice({
     finishLoading: (state) => {
       state.isLoading = false;
     },
+    finishPlanLoading: (state) => {
+      state.isPlanLoading = false;
+    },
   },
 });
 
-export const { setUser, clearUser, finishLoading } = userSlice.actions;
+export const { setUser, clearUser, finishLoading, finishPlanLoading } = userSlice.actions;
 export default userSlice.reducer;

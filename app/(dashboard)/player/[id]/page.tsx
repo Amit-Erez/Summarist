@@ -4,7 +4,6 @@ import { ImSpinner8 } from "react-icons/im";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentBook } from "@/slices/bookSlice";
 import type { RootState } from "@/store/store";
-import type { Book } from "@/types/book";
 import { useEffect } from "react";
 import Audio from "@/components/Audio/Audio";
 import AudioLoad from "@/components/Audio/AudioLoad";

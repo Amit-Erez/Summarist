@@ -8,6 +8,7 @@ import { PiCaretDown } from "react-icons/pi";
 import { ImSpinner8 } from "react-icons/im";
 import { useState } from "react";
 import Footer from "@/components/Footer/Footer";
+import { createCheckoutSession } from "@/utilities/createCheckoutSession";
 
 export default function ChoosePlan() {
   const [active, setActive] = useState<boolean>(true);
@@ -103,7 +104,21 @@ export default function ChoosePlan() {
           </div>
           <div className={styles["plan__card--cta"]}>
             <span className={styles["btn--wrapper"]}>
-              <button className={styles.btn} onClick={() => setStart(true)}>
+              <button
+                className={styles.btn}
+                onClick={async () => {
+                  try {
+                    setStart(true);
+                    const priceId = active
+                      ? "price_1SNhaTQrOaFGUgPBJmsRjcKv" // yearly plan (free trial)
+                      : "price_1SNhaTQrOaFGUgPB6kHXdVnD"; // monthly plan
+                    await createCheckoutSession(priceId);
+                  } catch (error) {
+                    console.error("Checkout error:", error);
+                    setStart(false);
+                  }
+                }}
+              >
                 {start ? (
                   <div className={styles["spinner__icon--wrapper"]}>
                     <ImSpinner8 />

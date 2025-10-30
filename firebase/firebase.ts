@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStripePayments } from "@stripe/firestore-stripe-payments";
 
 
 // Your web app's Firebase configuration
@@ -17,3 +18,9 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+// Stripe Payments connection (from the Firebase extension - not in use currently)
+export const payments = getStripePayments(app, {
+productsCollection: "products",
+customersCollection: "customers", // this matches your Firestore collection name
+});

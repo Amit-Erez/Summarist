@@ -5,8 +5,10 @@ import { AppDispatch, RootState } from "@/store/store";
 import { openLogin } from "@/slices/uiLoginSlice";
 
 export default function Settings() {
+  
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
+
 
   if (user.isLoading) {
     return (
@@ -40,8 +42,30 @@ export default function Settings() {
               <div className={styles["settings__sub--title"]}>
                 Your Subscription plan
               </div>
-              <div className={styles.settings__text}>{user.plan}</div>
-              <a className={`${styles.btn} ${styles["settings__upgrade--btn"]}`} href="/choose-plan">Upgrade to Premium</a>
+              <div className={styles.settings__text}>
+                {user.isPlanLoading
+                  ? ""
+                  : user.plan
+                  ? user.plan.replace("_", " ")
+                  : "basic"}
+              </div>
+              {user.plan === "basic" && (
+                <a
+                  className={`${styles.btn} ${styles["settings__upgrade--btn"]}`}
+                  href="/choose-plan"
+                >
+                  Upgrade to Premium
+                </a>
+              )}
+              {user.plan === "premium" && (
+                <a
+                  className={`${styles.btn} ${styles["settings__upgrade--btn-pp"]}`}
+                  href="/choose-plan"
+                >
+                  Upgrade to Premium Plus
+                </a>
+              )}
+              {user.plan === "premium plus" && null}
             </div>
             <div className={styles["setting__content"]}>
               <div className={styles["settings__sub--title"]}>Email</div>
