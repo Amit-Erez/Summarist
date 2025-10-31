@@ -5,8 +5,11 @@ import { RiReplay10Line, RiForward10Line } from "react-icons/ri";
 import { RiPlayLargeFill } from "react-icons/ri";
 import { GiPauseButton } from "react-icons/gi";
 import { useRef, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addFinished } from "@/slices/finishedSlice";
 
 export default function Audio({ book }: { book: Book }) {
+  const dispatch = useDispatch();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -61,6 +64,11 @@ export default function Audio({ book }: { book: Book }) {
     setCurrentTime(newTime);
     audio.currentTime = newTime;
   }
+
+  const handleAudioEnded = () => {
+    console.log("✅ Audio finished for:", book.title);
+    dispatch(addFinished(book));
+  };
 
   return (
     <>
@@ -124,7 +132,7 @@ export default function Audio({ book }: { book: Book }) {
           <div className={styles.audio__time}>{formatTime(duration)}</div>
         </div>
       </div>
-      <audio ref={audioRef} src={book.audioLink} preload="metadata" />
+      <audio ref={audioRef} src={book.audioLink} onEnded={handleAudioEnded} preload="metadata" />
     </>
   );
 }

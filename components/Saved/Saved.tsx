@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 
 export default function Saved() {
   const savedBooks = useSelector((state: RootState) => state.saved.savedBooks);
-  const user = useSelector((state: RootState) => state.user);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

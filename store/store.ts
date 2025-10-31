@@ -4,6 +4,7 @@ import userReducer from "@/slices/userSlice"
 import fontSizeReducer from "@/slices/fontSizeSlice"
 import bookReducer from "@/slices/bookSlice";
 import savedReducer from "@/slices/savedSlice";
+import finishedReducer from "@/slices/finishedSlice";
 
 
 export const store = configureStore({
@@ -12,7 +13,8 @@ export const store = configureStore({
         user: userReducer,
         fontSize: fontSizeReducer,
         book: bookReducer,
-        saved: savedReducer
+        saved: savedReducer,
+        finished: finishedReducer
     }
 })
 
