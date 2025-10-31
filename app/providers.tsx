@@ -46,7 +46,7 @@ function AuthListener() {
         dispatch(
           setUser({
             uid: user.uid,
-            email: storedUser?.email ?? user.email ?? null,
+            email: storedUser?.email || user.email || "guest@summarist.com",
             plan: storedUser?.plan ?? null,
             isLoggedIn: true,
           })

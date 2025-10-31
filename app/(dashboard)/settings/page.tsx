@@ -30,6 +30,7 @@ export default function Settings() {
     );
   }
 
+
   return (
     <div className={styles.container}>
       <div className={styles.row}>

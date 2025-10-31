@@ -38,10 +38,9 @@ export default function BookCard({ book }: { book: Book }) {
       className={styles["for-you__recommended--books-link"]}
       href={`/book/${book.id}`}
     >
-      {(book.subscriptionRequired && user.plan === "basic") ||
-        (book.subscriptionRequired && !isLoggedIn && (
-          <div className={styles["book__pill"]}>Premium</div>
-        ))}
+      {book.subscriptionRequired && (user.plan === "basic" || !isLoggedIn) && (
+        <div className={styles["book__pill"]}>Premium</div>
+      )}
       <figure className={styles["book__img--wrapper"]}>
         <img className={styles.book__image} src={book.imageLink} alt="book" />
       </figure>

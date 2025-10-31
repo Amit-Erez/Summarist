@@ -189,14 +189,15 @@ export default function Sidebar() {
                 Help & Support
               </div>
             </div>
-            <div className={styles["sidebar__link--wrapper"]}>
+            <div className={styles["sidebar__link--wrapper"]}
+            onClick={handleAuthClick}>
               <div className={styles["sidebar__link--line"]}></div>
               <div className={styles["sidebar__icon--wrapper"]}>
                 <MdLogout />
               </div>
               <div
                 className={styles["sidebar__link--text"]}
-                onClick={handleAuthClick}
+                
               >
                 {user.isLoggedIn ? "Logout" : "Login"}
               </div>

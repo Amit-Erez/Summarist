@@ -70,7 +70,7 @@ export default function Searchbar() {
                   <a
                     key={book.id}
                     className={styles["search__book--link"]}
-                    href={`/books/${book.id}`}
+                    href={`/book/${book.id}`}
                   >
                     <figure className={styles["book__image--wrapper"]}>
                       <img

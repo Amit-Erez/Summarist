@@ -9,21 +9,29 @@ import { HiOutlineMicrophone } from "react-icons/hi";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { LuBookOpenText } from "react-icons/lu";
 import { BsBookmark } from "react-icons/bs";
+import { BsBookmarkFill } from "react-icons/bs";
 import BookInfoLoad from "./BookInfoLoad";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentBook } from "@/slices/bookSlice";
 import { openLogin } from "@/slices/uiLoginSlice";
+import { saveBook, removeBook } from "@/slices/savedSlice";
 import type { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 
 export default function BookInfoContent({ book }: { book: Book }) {
   const [loading, setLoading] = useState(true);
-
+  const [added, setAdded] = useState(false)
+  const savedBooks = useSelector((state: RootState) => state.saved.savedBooks);
   const isPlan = useSelector((state: RootState) => state.user.plan);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const router = useRouter();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+  const isSaved = savedBooks.some((b) => b.id === book.id);
+  setAdded(isSaved);
+}, [savedBooks, book.id]);
 
   const seconds = bookDurations[book.id];
   const timeFormatted = seconds ? formatTime(seconds) : "00:00";
@@ -58,6 +66,8 @@ export default function BookInfoContent({ book }: { book: Book }) {
     const t = setTimeout(() => setLoading(false), 100);
     return () => clearTimeout(t);
   }, []);
+
+  console.log(savedBooks)
 
   return loading ? (
     <BookInfoLoad />
@@ -120,7 +130,12 @@ export default function BookInfoContent({ book }: { book: Book }) {
             </div>
           </button>
         </div>
-        <div className={styles["inner__book--bookmark"]}>
+        { !added ? 
+        <div className={styles["inner__book--bookmark"]}
+        onClick={() => 
+          {dispatch(saveBook(book)),
+          setAdded(true)}
+        }>
           <div className={styles["inner__book--bookmark-icon"]}>
             <BsBookmark />
           </div>
@@ -128,6 +143,20 @@ export default function BookInfoContent({ book }: { book: Book }) {
             Add title to My Library
           </div>
         </div>
+        :
+        <div className={styles["inner__book--bookmark"]}
+        onClick={() => {dispatch(removeBook(book.id)),
+          setAdded(false)}
+        }>
+          <div className={styles["inner__book--bookmark-icon"]}>
+            <BsBookmarkFill />
+          </div>
+          <div className={styles["inner__book--bookmark-text"]}>
+            Saved in My Library
+          </div>
+        </div>
+        
+      }
         <div className={styles["inner__book--secondary-title"]}>
           What's it about?
         </div>

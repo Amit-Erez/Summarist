@@ -3,6 +3,7 @@ import uiLoginReducer from "@/slices/uiLoginSlice";
 import userReducer from "@/slices/userSlice"
 import fontSizeReducer from "@/slices/fontSizeSlice"
 import bookReducer from "@/slices/bookSlice";
+import savedReducer from "@/slices/savedSlice";
 
 
 export const store = configureStore({
@@ -11,7 +12,8 @@ export const store = configureStore({
         user: userReducer,
         fontSize: fontSizeReducer,
         book: bookReducer,
-    },
+        saved: savedReducer
+    }
 })
 
 export type RootState = ReturnType<typeof store.getState>;

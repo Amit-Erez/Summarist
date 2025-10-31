@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { db } from "@/firebase/firebase";
 import { setUser, finishPlanLoading } from "@/slices/userSlice";
 import { RootState } from "@/store/store";
+import { auth } from "@/firebase/firebase";
+
 
 export default function useSubscriptionListener() {
   const dispatch = useDispatch();
@@ -36,6 +38,12 @@ export default function useSubscriptionListener() {
           }
         }
       });
+
+      // 1. Skip downgrading anonymous users without subscriptions
+      if (auth.currentUser?.isAnonymous && detectedPlan === "basic") {
+        dispatch(finishPlanLoading());
+        return;
+      }
 
       // 1. Update Redux user.plan
       dispatch(setUser({ plan: detectedPlan }));
