@@ -13,16 +13,28 @@ export default function Saved() {
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
-
   return (
-    <> 
+    <>
       <div className={styles["for-you__title"]}>Saved Books</div>
-      <div className={styles["for-you__sub-title"]}>{savedBooks.length} item{savedBooks.length !== 1 ? "s" : ""}</div>
-      <div className={styles["for-you__recommended--books"]}>
-        {savedBooks.map((b) => (
-          <BookCard key={b.id} book={b} />
-        ))}
+      <div className={styles["for-you__sub-title"]}>
+        {savedBooks.length} item{savedBooks.length !== 1 ? "s" : ""}
       </div>
+      {savedBooks.length === 0 ? (
+        <div className={styles["finished__books--block-wrapper"]}>
+          <div className={styles["finished__books--title"]}>
+            Save your favorite books!
+          </div>
+          <div className={styles["finished__books--sub-title"]}>
+            When you save a book, it will appear here.
+          </div>
+        </div>
+      ) : (
+        <div className={styles["for-you__recommended--books"]}>
+          {savedBooks.map((b) => (
+            <BookCard key={b.id} book={b} />
+          ))}
+        </div>
+      )}
     </>
   );
 }

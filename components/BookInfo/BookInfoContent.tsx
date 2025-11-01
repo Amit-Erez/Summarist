@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentBook } from "@/slices/bookSlice";
 import { openLogin } from "@/slices/uiLoginSlice";
 import { saveBook, removeBook } from "@/slices/savedSlice";
+import { removeFinished } from "@/slices/finishedSlice"
 import type { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 
@@ -179,6 +180,7 @@ export default function BookInfoContent({ book }: { book: Book }) {
       <div className={styles["inner__book--img-wrapper"]}>
         <figure className={styles["book__image--wrapper"]}>
           <img className={styles.book__image} src={book.imageLink} alt="book" />
+          <button className={styles.removefinished} onClick={() => dispatch(removeFinished(book.id))}>remove</button>
         </figure>
       </div>
     </>
