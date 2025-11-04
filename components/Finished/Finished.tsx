@@ -8,10 +8,6 @@ export default function Finished() {
     (state: RootState) => state.finished.finishedBooks
   );
 
-  //  const [mounted, setMounted] = useState(false);
-  //   useEffect(() => setMounted(true), []);
-  //   if (!mounted) return null;
-
   return (
     <>
       <div className={styles["for-you__title"]}>Finished</div>

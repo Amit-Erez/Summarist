@@ -66,7 +66,6 @@ export default function Searchbar() {
                   <div></div>
                 </div>
               ) : (
-                <>
                   <a
                     key={book.id}
                     className={styles["search__book--link"]}
@@ -102,7 +101,6 @@ export default function Searchbar() {
                       </div>
                     </div>
                   </a>
-                </>
               )
             )}
           </div>

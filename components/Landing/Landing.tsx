@@ -1,14 +1,7 @@
-"use client"
-
 import styles from "@/components/Landing/Landing.module.css";
-import { useDispatch } from "react-redux";
-import { openLogin } from "@/slices/uiLoginSlice";
-import type { AppDispatch } from "@/store/store";
+import LandingButton from "./LandingButton";
 
 export default function Landing() {
-
-  const dispatch = useDispatch<AppDispatch>();
-
   return (
     <section id="landing">
       <div className={styles.container}>
@@ -26,10 +19,7 @@ export default function Landing() {
                 <br className={styles["remove--tablet"]} />
                 and even people who don’t like to read.
               </div>
-              <button className={`${styles.btn} ${styles["home__cta--btn"]}`}
-              onClick={() => dispatch(openLogin())}>
-                Login
-              </button>
+              <LandingButton />
             </div>
             <figure className={styles["landing__image--mask"]}>
               <img src="/assets/landing.png" alt="landing" />

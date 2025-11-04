@@ -1,5 +1,6 @@
 import styles from "@/components/Reviews/Reviews.module.css"
 import { BsStarFill } from "react-icons/bs";
+import LandingButton from "../Landing/LandingButton";
 
 export default function Reviews() {
     return (
@@ -81,9 +82,7 @@ export default function Reviews() {
               </div>
             </div>
             <div className={styles["reviews__btn--wrapper"]}>
-              <button className={`${styles.btn} ${styles["home__cta--btn"]}`}>
-                Login
-              </button>
+              <LandingButton />
             </div>
           </div>
         </div>

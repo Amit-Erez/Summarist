@@ -19,30 +19,23 @@ import { saveBook, removeBook } from "@/slices/savedSlice";
 import { removeFinished } from "@/slices/finishedSlice";
 import type { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
+import { formatTime } from "@/utilities/formatTime";
 
 export default function BookInfoContent({ book }: { book: Book }) {
-  const [loading, setLoading] = useState(true);
-  const [added, setAdded] = useState(false);
-  const savedBooks = useSelector((state: RootState) => state.saved.savedBooks);
-  const isPlan = useSelector((state: RootState) => state.user.plan);
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const router = useRouter();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [added, setAdded] = useState(false);
+
+  const { savedBooks } = useSelector((state: RootState) => state.saved);
+  const { plan, isLoggedIn } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    const isSaved = savedBooks.some((b) => b.id === book.id);
-    setAdded(isSaved);
+    setAdded(savedBooks.some((b) => b.id === book.id));
   }, [savedBooks, book.id]);
 
   const seconds = bookDurations[book.id];
   const timeFormatted = seconds ? formatTime(seconds) : "00:00";
-
-  function formatTime(seconds: number): string {
-    if (isNaN(seconds)) return "00:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }
 
   function Route() {
     localStorage.setItem("currentBook", JSON.stringify(book));
@@ -54,7 +47,7 @@ export default function BookInfoContent({ book }: { book: Book }) {
     }
 
     // 2️⃣ If logged in but still basic → redirect to upgrade
-    if (isPlan === "basic" || !isPlan) {
+    if (plan === "basic" || !plan) {
       router.push("/choose-plan");
       return;
     }
@@ -70,23 +63,27 @@ export default function BookInfoContent({ book }: { book: Book }) {
 
   console.log(savedBooks);
 
-  return loading ? (
-    <BookInfoLoad />
-  ) : (
+  if (loading) return <BookInfoLoad />;
+
+  return (
     <>
-    <div className={styles.booktop}>
-    <div className={styles["inner__book--img-wrapper"]}>
-        <figure className={styles["book__image--wrapper"]}>
-          <img className={styles.book__image} src={book.imageLink} alt="book" />
-          <button
-            className={styles.removefinished}
-            onClick={() => dispatch(removeFinished(book.id))}
-          >
-            remove
-          </button>
-        </figure>
+      <div className={styles.booktop}>
+        <div className={styles["inner__book--img-wrapper"]}>
+          <figure className={styles["book__image--wrapper"]}>
+            <img
+              className={styles.book__image}
+              src={book.imageLink}
+              alt="book"
+            />
+            <button
+              className={styles.removefinished}
+              onClick={() => dispatch(removeFinished(book.id))}
+            >
+              remove
+            </button>
+          </figure>
+        </div>
       </div>
-    </div>
       <div className={styles.inner__book}>
         <div className={styles["inner__book--title"]}>{book.title}</div>
         <div className={styles["inner__book--author"]}>{book.author}</div>
@@ -191,17 +188,21 @@ export default function BookInfoContent({ book }: { book: Book }) {
         </div>
       </div>
       <div className={styles.bookside}>
-      <div className={styles["inner__book--img-wrapper"]}>
-        <figure className={styles["book__image--wrapper"]}>
-          <img className={styles.book__image} src={book.imageLink} alt="book" />
-          <button
-            className={styles.removefinished}
-            onClick={() => dispatch(removeFinished(book.id))}
-          >
-            remove
-          </button>
-        </figure>
-      </div>
+        <div className={styles["inner__book--img-wrapper"]}>
+          <figure className={styles["book__image--wrapper"]}>
+            <img
+              className={styles.book__image}
+              src={book.imageLink}
+              alt="book"
+            />
+            <button
+              className={styles.removefinished}
+              onClick={() => dispatch(removeFinished(book.id))}
+            >
+              remove
+            </button>
+          </figure>
+        </div>
       </div>
     </>
   );

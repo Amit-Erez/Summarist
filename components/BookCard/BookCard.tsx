@@ -9,10 +9,11 @@ import BookCardLoad from "./BookCardLoad";
 import { bookDurations } from "@/public/bookDurations";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import Link from "next/link";
+import { formatTime } from "@/utilities/formatTime";
 
 export default function BookCard({ book }: { book: Book }) {
-  const user = useSelector((state: RootState) => state.user);
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  const { isLoggedIn, plan } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,22 +24,15 @@ export default function BookCard({ book }: { book: Book }) {
   const seconds = bookDurations[book.id];
   const timeFormatted = seconds ? formatTime(seconds) : "00:00";
 
-  function formatTime(seconds: number): string {
-    if (isNaN(seconds)) return "00:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }
-
   return loading ? (
     <BookCardLoad />
   ) : (
-    <a
+    <Link
       key={book.id}
       className={styles["for-you__recommended--books-link"]}
       href={`/book/${book.id}`}
     >
-      {book.subscriptionRequired && (user.plan === "basic" || !isLoggedIn) && (
+      {book.subscriptionRequired && (plan === "basic" || !isLoggedIn) && (
         <div className={styles["book__pill"]}>Premium</div>
       )}
       <figure className={styles["book__img--wrapper"]}>
@@ -67,6 +61,6 @@ export default function BookCard({ book }: { book: Book }) {
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
