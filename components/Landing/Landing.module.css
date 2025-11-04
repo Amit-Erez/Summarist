@@ -45,7 +45,7 @@
   display: flex;
   margin-left: 0;
   width: 100%;
-  animation: fade-in 800ms ease-in; 
+  animation: fade-in 300ms ease-in; 
 }
 
 @keyframes fade-in {

@@ -16,7 +16,7 @@
   text-align: center;
   margin-bottom: 32px;
   font-weight: bold;
-  animation: fade-in 800ms ease-in; 
+  animation: fade-in 300ms ease-in; 
 }
 
 .btn {
@@ -54,7 +54,7 @@
 .reviews__wrapper {
   max-width: 600px;
   margin: 0 auto;
-  animation: fade-in 800ms ease-in; 
+  animation: fade-in 300ms ease-in; 
 }
 
 @keyframes fade-in {
