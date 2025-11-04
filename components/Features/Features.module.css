@@ -1,3 +1,4 @@
+
 .row {
   max-width: 1070px;
   width: 100%;
@@ -16,6 +17,7 @@
   text-align: center;
   margin-bottom: 32px;
   font-weight: bold;
+  animation: fade-in 800ms ease-in; 
 }
 
 .features__wrapper {
@@ -23,6 +25,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   margin-bottom: 96px;
+  animation: fade-in 800ms ease-in; 
 }
 
 .features {
@@ -30,6 +33,19 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    filter: contrast(0.96);
+    transform: translateX(-10vw);
+  }
+  100% {
+    filter: contrast(1);
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .features__icon {
@@ -64,6 +80,25 @@
   margin-bottom: 16px;
 }
 
+:global(.statistics__heading) {
+  color: #6b757b;
+  animation: pulseJump 15s linear infinite; /* total duration = headings × 1s */
+}
+
+/* apply a stagger (each starts a bit later) */
+:global(.statistics__heading:nth-child(1)) { animation-delay: 0s; }
+:global(.statistics__heading:nth-child(2)) { animation-delay: 2.5s; }
+:global(.statistics__heading:nth-child(3)) { animation-delay: 5s; }
+:global(.statistics__heading:nth-child(4)) { animation-delay: 7.5s; }
+:global(.statistics__heading:nth-child(5)) { animation-delay: 10s; }
+:global(.statistics__heading:nth-child(6)) { animation-delay: 12.5s; }
+
+@keyframes pulseJump {
+  0%, 16.6%   { color: #2bd97c; }  /* green for this frame */
+  16.7%, 100% { color: #6b757b; }  /* black otherwise */
+}
+
+
 .statistics__heading:last-child {
   margin-bottom: 0;
 }
@@ -76,6 +111,7 @@
   display: flex;
   gap: 80px;
   margin-bottom: 96px;
+  animation: fade-in 800ms ease-in; 
 }
 
 .statistics__wrapper:last-child {
