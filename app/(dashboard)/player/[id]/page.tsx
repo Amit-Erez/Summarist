@@ -4,7 +4,7 @@ import { ImSpinner8 } from "react-icons/im";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentBook } from "@/slices/bookSlice";
 import type { RootState } from "@/store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Audio from "@/components/Audio/Audio";
 import AudioLoad from "@/components/Audio/AudioLoad";
 
@@ -12,6 +12,12 @@ export default function Player() {
   const dispatch = useDispatch();
   const book = useSelector((state: RootState) => state.book.currentBook);
   const fontSize = useSelector((state: RootState) => state.fontSize.fontSize);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300); 
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!book) {
@@ -22,13 +28,15 @@ export default function Player() {
     }
   }, [book, dispatch]);
 
-  if (!book) return (
-  <div className={styles.summary__load}>
-    <div className={styles["audio__book--spinner"]}>
-      <ImSpinner8 />
-    </div>
-    <AudioLoad />
-  </div>)
+  if (isLoading || !book)
+    return (
+      <div className={styles.summary__load}>
+        <div className={styles["audio__book--spinner"]}>
+          <ImSpinner8 />
+        </div>
+        <AudioLoad />
+      </div>
+    );
 
   return (
     <div className={styles.summary}>
@@ -49,7 +57,7 @@ export default function Player() {
           {book?.summary}
         </div>
       </div>
-        <Audio book={book}/>
+      <Audio book={book} />
     </div>
   );
 }

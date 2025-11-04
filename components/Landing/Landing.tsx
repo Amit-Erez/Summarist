@@ -20,9 +20,9 @@ export default function Landing() {
                 in less time
               </div>
               <div className={styles.landing__content__subtitle}>
-                Great summaries for busy people,
+                Great summaries for busy people,&nbsp;
                 <br className={styles["remove--tablet"]} />
-                individuals who barely have time to read,
+                individuals who barely have time to read,&nbsp;
                 <br className={styles["remove--tablet"]} />
                 and even people who don’t like to read.
               </div>

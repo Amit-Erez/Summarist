@@ -163,3 +163,12 @@
     height: 100%;
 }
 
+@media (max-width: 490px) {
+  .search__books--wrapper{
+    right: 5%;
+    max-width: 90%;
+  }
+  .search__book--title {
+    font-size: 14px;
+  }
+}

@@ -174,9 +174,54 @@
   height: 100%;
 }
 
+.bookside {
+  display: block;
+}
+
+.booktop {
+  display: none;
+}
+
 .removefinished {
   position: absolute;
-  right:  0;
+  right: 0;
   opacity: 0;
   cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .inner__wrapper {
+    flex-direction: column;
+    gap: 32px;
+  }
+  .inner__book--img-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .bookside {
+    display: none;
+  }
+
+  .booktop {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+    .inner__book--title {
+        font-size:24px
+    }
+
+    .inner__book--sub-title {
+        font-size: 18px
+    }
+
+    .inner__book--author,.inner__book--author-description,.inner__book--book-description,.inner__book--tag {
+        font-size: 14px
+    }
+
+    .inner__book--bookmark {
+        font-size: 16px
+    }
 }

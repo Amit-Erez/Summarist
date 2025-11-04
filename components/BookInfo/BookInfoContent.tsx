@@ -2,7 +2,7 @@
 
 import styles from "./BookInfoContent.module.css";
 import type { Book } from "@/types/book";
-import { bookDurations } from "@/public/bookDurations"
+import { bookDurations } from "@/public/bookDurations";
 import { LuClock3 } from "react-icons/lu";
 import { FaRegStar } from "react-icons/fa";
 import { HiOutlineMicrophone } from "react-icons/hi";
@@ -16,13 +16,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentBook } from "@/slices/bookSlice";
 import { openLogin } from "@/slices/uiLoginSlice";
 import { saveBook, removeBook } from "@/slices/savedSlice";
-import { removeFinished } from "@/slices/finishedSlice"
+import { removeFinished } from "@/slices/finishedSlice";
 import type { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 
 export default function BookInfoContent({ book }: { book: Book }) {
   const [loading, setLoading] = useState(true);
-  const [added, setAdded] = useState(false)
+  const [added, setAdded] = useState(false);
   const savedBooks = useSelector((state: RootState) => state.saved.savedBooks);
   const isPlan = useSelector((state: RootState) => state.user.plan);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
@@ -30,37 +30,37 @@ export default function BookInfoContent({ book }: { book: Book }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-  const isSaved = savedBooks.some((b) => b.id === book.id);
-  setAdded(isSaved);
-}, [savedBooks, book.id]);
+    const isSaved = savedBooks.some((b) => b.id === book.id);
+    setAdded(isSaved);
+  }, [savedBooks, book.id]);
 
   const seconds = bookDurations[book.id];
   const timeFormatted = seconds ? formatTime(seconds) : "00:00";
 
   function formatTime(seconds: number): string {
-  if (isNaN(seconds)) return "00:00";
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
+    if (isNaN(seconds)) return "00:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }
 
   function Route() {
     localStorage.setItem("currentBook", JSON.stringify(book));
     dispatch(setCurrentBook(book));
 
-     if (!isLoggedIn) {
-    dispatch(openLogin());
-    return;
-  }
+    if (!isLoggedIn) {
+      dispatch(openLogin());
+      return;
+    }
 
-  // 2️⃣ If logged in but still basic → redirect to upgrade
-  if (isPlan === "basic" || !isPlan) {
-    router.push("/choose-plan");
-    return;
-  }
+    // 2️⃣ If logged in but still basic → redirect to upgrade
+    if (isPlan === "basic" || !isPlan) {
+      router.push("/choose-plan");
+      return;
+    }
 
-  // 3️⃣ If premium or premium plus → go to player
-  router.push(`/player/${book.id}`);
+    // 3️⃣ If premium or premium plus → go to player
+    router.push(`/player/${book.id}`);
   }
 
   useEffect(() => {
@@ -68,12 +68,25 @@ export default function BookInfoContent({ book }: { book: Book }) {
     return () => clearTimeout(t);
   }, []);
 
-  console.log(savedBooks)
+  console.log(savedBooks);
 
   return loading ? (
     <BookInfoLoad />
   ) : (
     <>
+    <div className={styles.booktop}>
+    <div className={styles["inner__book--img-wrapper"]}>
+        <figure className={styles["book__image--wrapper"]}>
+          <img className={styles.book__image} src={book.imageLink} alt="book" />
+          <button
+            className={styles.removefinished}
+            onClick={() => dispatch(removeFinished(book.id))}
+          >
+            remove
+          </button>
+        </figure>
+      </div>
+    </div>
       <div className={styles.inner__book}>
         <div className={styles["inner__book--title"]}>{book.title}</div>
         <div className={styles["inner__book--author"]}>{book.author}</div>
@@ -95,7 +108,9 @@ export default function BookInfoContent({ book }: { book: Book }) {
               <div className={styles["inner__book--icon"]}>
                 <LuClock3 />
               </div>
-              <div className={styles["inner__book--duration"]}>{timeFormatted}</div>
+              <div className={styles["inner__book--duration"]}>
+                {timeFormatted}
+              </div>
             </div>
             <div className={styles["inner__book--description"]}>
               <div className={styles["inner__book--icon"]}>
@@ -118,46 +133,44 @@ export default function BookInfoContent({ book }: { book: Book }) {
             <div className={styles["inner__book--read-icon"]}>
               <LuBookOpenText />
             </div>
-            <div className={styles["inner__book--read-text"]}>
-              Read
-            </div>
+            <div className={styles["inner__book--read-text"]}>Read</div>
           </button>
           <button className={styles["inner__book--read-btn"]} onClick={Route}>
             <div className={styles["inner__book--read-icon"]}>
               <HiOutlineMicrophone />
             </div>
-            <div className={styles["inner__book--read-text"]}>
-              Listen
-            </div>
+            <div className={styles["inner__book--read-text"]}>Listen</div>
           </button>
         </div>
-        { !added ? 
-        <div className={styles["inner__book--bookmark"]}
-        onClick={() => 
-          {dispatch(saveBook(book)),
-          setAdded(true)}
-        }>
-          <div className={styles["inner__book--bookmark-icon"]}>
-            <BsBookmark />
+        {!added ? (
+          <div
+            className={styles["inner__book--bookmark"]}
+            onClick={() => {
+              dispatch(saveBook(book)), setAdded(true);
+            }}
+          >
+            <div className={styles["inner__book--bookmark-icon"]}>
+              <BsBookmark />
+            </div>
+            <div className={styles["inner__book--bookmark-text"]}>
+              Add title to My Library
+            </div>
           </div>
-          <div className={styles["inner__book--bookmark-text"]}>
-            Add title to My Library
+        ) : (
+          <div
+            className={styles["inner__book--bookmark"]}
+            onClick={() => {
+              dispatch(removeBook(book.id)), setAdded(false);
+            }}
+          >
+            <div className={styles["inner__book--bookmark-icon"]}>
+              <BsBookmarkFill />
+            </div>
+            <div className={styles["inner__book--bookmark-text"]}>
+              Saved in My Library
+            </div>
           </div>
-        </div>
-        :
-        <div className={styles["inner__book--bookmark"]}
-        onClick={() => {dispatch(removeBook(book.id)),
-          setAdded(false)}
-        }>
-          <div className={styles["inner__book--bookmark-icon"]}>
-            <BsBookmarkFill />
-          </div>
-          <div className={styles["inner__book--bookmark-text"]}>
-            Saved in My Library
-          </div>
-        </div>
-        
-      }
+        )}
         <div className={styles["inner__book--secondary-title"]}>
           What's it about?
         </div>
@@ -177,11 +190,18 @@ export default function BookInfoContent({ book }: { book: Book }) {
           {book.authorDescription}
         </div>
       </div>
+      <div className={styles.bookside}>
       <div className={styles["inner__book--img-wrapper"]}>
         <figure className={styles["book__image--wrapper"]}>
           <img className={styles.book__image} src={book.imageLink} alt="book" />
-          <button className={styles.removefinished} onClick={() => dispatch(removeFinished(book.id))}>remove</button>
+          <button
+            className={styles.removefinished}
+            onClick={() => dispatch(removeFinished(book.id))}
+          >
+            remove
+          </button>
         </figure>
+      </div>
       </div>
     </>
   );
