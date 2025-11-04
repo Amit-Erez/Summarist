@@ -19,17 +19,22 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isHydrated, setIsHydrated] = useState(false);
   const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
   const [reset, setReset] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const handleGuestLogin = async () => {
     try {
@@ -53,6 +58,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
+    if (!isHydrated) return;
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
