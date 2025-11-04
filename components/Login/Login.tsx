@@ -72,13 +72,8 @@ export default function Login() {
         },
         dispatch
       );
-      console.log("✅ Google sign-in success");
-    } catch (error: any) {
-      console.error("Google login failed:",{
-    code: error.code,
-    message: error.message,
-    customData: error.customData,
-  });
+    } catch (error) {
+      console.error("Google login failed:", error);
     }
   };
 
