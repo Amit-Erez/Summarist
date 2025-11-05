@@ -27,6 +27,7 @@ export default function Login() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
   const [reset, setReset] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
@@ -94,7 +95,7 @@ export default function Login() {
       router.push("/for-you");
     } catch (error: any) {
       console.error("Email login failed:", error);
-      alert(error.message);
+      setError(error.message);
     }
   };
 
@@ -119,21 +120,23 @@ export default function Login() {
       router.push("/for-you");
     } catch (error: any) {
       console.error("Signup failed:", error);
-      alert(error.message);
+      setError(error.message);
     }
   };
 
   const handlePasswordReset = async (email: string) => {
     try {
       if (!email) {
-        alert("Please enter your email address.");
+        setReset(false);
+        setError("Please enter your email address.");
         return;
       }
       await sendPasswordResetEmail(auth, email);
+      setError(null);
       setReset(true);
     } catch (error: any) {
       console.error("Password reset failed:", error);
-      alert(error.message);
+      setError(error.message);
     }
   };
 
@@ -155,6 +158,10 @@ export default function Login() {
           <>
             <div className={styles.auth__content}>
               <div className={styles.auth__title}>Log in to Summarist</div>
+              {error && 
+              
+              <div className={styles.auth__error}>{error}</div>
+              }
               <button
                 className={`${styles.btn} ${styles["guest__btn--wrapper"]}`}
                 onClick={handleGuestLogin}
@@ -214,6 +221,7 @@ export default function Login() {
                 setEmail("");
                 setPassword("");
                 setMode("forgot");
+                setError(null);
               }}
             >
               Forgot your password?
@@ -224,6 +232,7 @@ export default function Login() {
                 setEmail("");
                 setPassword("");
                 setMode("signup");
+                setError(null);
               }}
             >
               Don't have an account?
@@ -233,6 +242,7 @@ export default function Login() {
               onClick={() => {
                 dispatch(closeLogin());
                 setMode("login");
+                setError(null);
               }}
             >
               <RiCloseLargeFill />
@@ -248,6 +258,10 @@ export default function Login() {
                   Your reset email has been sent!
                 </div>
               )}
+              {error && 
+              
+              <div className={styles.auth__error}>{error}</div>
+              }
               <form className={styles["auth__main--form"]}>
                 <input
                   className={styles["auth__main--input"]}
@@ -272,6 +286,7 @@ export default function Login() {
                 setPassword("");
                 setMode("login");
                 setReset(false);
+                setError(null);
               }}
             >
               Go to login
@@ -282,6 +297,7 @@ export default function Login() {
                 dispatch(closeLogin());
                 setMode("login");
                 setReset(false);
+                setError(null);
               }}
             >
               <RiCloseLargeFill />
@@ -292,6 +308,10 @@ export default function Login() {
           <>
             <div className={styles.auth__content}>
               <div className={styles.auth__title}>Sign up to Summarist</div>
+              {error && 
+              
+              <div className={styles.auth__error}>{error}</div>
+              }
               <button
                 className={`${styles.btn} ${styles["google__btn--wrapper"]}`}
                 onClick={handleGoogleLogin}
@@ -337,6 +357,7 @@ export default function Login() {
                 setEmail("");
                 setPassword("");
                 setMode("login");
+                setError(null);
               }}
             >
               Already have an account?
@@ -346,6 +367,7 @@ export default function Login() {
               onClick={() => {
                 dispatch(closeLogin());
                 setMode("login");
+                setError(null);
               }}
             >
               <RiCloseLargeFill />
