@@ -3,11 +3,16 @@ import styles from "./settings.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { openLogin } from "@/slices/uiLoginSlice";
+import { useEffect, useState } from "react";
 
 export default function Settings() {
   
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => setIsHydrated(true), []);
+  if (!isHydrated) return null; 
 
 
   if (user.isLoading) {
