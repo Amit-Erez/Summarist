@@ -9,7 +9,7 @@ import { Book } from "@/types/book";
 export default function Searchbar() {
   const [query, setQuery] = useState("");
   const debouncedQuery = searchBounce(query, 300);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
 

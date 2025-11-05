@@ -17,13 +17,13 @@ import { setCurrentBook } from "@/slices/bookSlice";
 import { openLogin } from "@/slices/uiLoginSlice";
 import { saveBook, removeBook } from "@/slices/savedSlice";
 import { removeFinished } from "@/slices/finishedSlice";
-import type { RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { formatTime } from "@/utilities/formatTime";
 
 export default function BookInfoContent({ book }: { book: Book }) {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
 

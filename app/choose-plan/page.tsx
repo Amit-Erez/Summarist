@@ -145,7 +145,14 @@ export default function ChoosePlan() {
             <div className={styles.accordion__card}>
               <div
                 className={styles.accordion__header}
-                onClick={() => setFaq(faq === "faqOne" ? "" : "faqOne")}
+                onClick={() => {
+                  if (faq === "faqOne") {
+                    setFaq("");
+                  } else {
+                    setFaq("");
+                    setTimeout(() => setFaq("faqOne"), 100);
+                  }
+                }}
               >
                 <div className={styles.accordion__title}>
                   How does the free 7-day trial work?
@@ -175,7 +182,14 @@ export default function ChoosePlan() {
             <div className={styles.accordion__card}>
               <div
                 className={styles.accordion__header}
-                onClick={() => setFaq(faq === "faqTwo" ? "" : "faqTwo")}
+                onClick={() => {
+                  if (faq === "faqTwo") {
+                    setFaq("");
+                  } else {
+                    setFaq("");
+                    setTimeout(() => setFaq("faqTwo"), 100);
+                  }
+                }}
               >
                 <div className={styles.accordion__title}>
                   Can I switch subscriptions from monthly to yearly, or yearly
@@ -203,7 +217,14 @@ export default function ChoosePlan() {
             <div className={styles.accordion__card}>
               <div
                 className={styles.accordion__header}
-                onClick={() => setFaq(faq === "faqThree" ? "" : "faqThree")}
+                onClick={() => {
+                  if (faq === "faqThree") {
+                    setFaq("");
+                  } else {
+                    setFaq("");
+                    setTimeout(() => setFaq("faqThree"), 100);
+                  }
+                }}
               >
                 <div className={styles.accordion__title}>
                   What's included in the Premium plan?
@@ -231,7 +252,14 @@ export default function ChoosePlan() {
             <div className={styles.accordion__card}>
               <div
                 className={styles.accordion__header}
-                onClick={() => setFaq(faq === "faqFour" ? "" : "faqFour")}
+                onClick={() => {
+                  if (faq === "faqFour") {
+                    setFaq("");
+                  } else {
+                    setFaq("");
+                    setTimeout(() => setFaq("faqFour"), 100);
+                  }
+                }}
               >
                 <div className={styles.accordion__title}>
                   Can I cancel during my trial or subscription?
