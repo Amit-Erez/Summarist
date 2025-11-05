@@ -42,12 +42,18 @@ function AuthListener() {
       }
 
       if (user) {
+        const isGuest = user.isAnonymous;
+        const resolvedPlan = isGuest ? "premium" : storedUser?.plan ?? null;
+        const resolvedEmail = isGuest
+          ? "guest@summarist.com"
+          : storedUser?.email || user.email || null;
+
         // ✅ Logged in
         dispatch(
           setUser({
             uid: user.uid,
-            email: storedUser?.email || user.email || "guest@summarist.com",
-            plan: storedUser?.plan ?? null,
+            email: resolvedEmail, 
+            plan: resolvedPlan,  
             isLoggedIn: true,
           })
         );
@@ -57,8 +63,8 @@ function AuthListener() {
           "authUser",
           JSON.stringify({
             uid: user.uid,
-            email: user.email,
-            plan: storedUser?.plan ?? null,
+            email: resolvedEmail, 
+            plan: resolvedPlan,
           })
         );
       } else {
