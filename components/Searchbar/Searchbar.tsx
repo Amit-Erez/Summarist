@@ -3,16 +3,15 @@ import styles from "@/components/Searchbar/Searchbar.module.css";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { FaPlayCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { searchBounce } from "@/utilities/searchBounce";
+import { useSearchBounce } from "@/utilities/searchBounce";
 import { Book } from "@/types/book";
 
 export default function Searchbar() {
   const [query, setQuery] = useState("");
-  const debouncedQuery = searchBounce(query, 300);
+  const debouncedQuery = useSearchBounce(query, 200);
   const [results, setResults] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
-
 
   useEffect(() => {
     if (!debouncedQuery) {
@@ -62,45 +61,45 @@ export default function Searchbar() {
           <div className={styles["search__books--wrapper"]}>
             {results.map((book: Book) =>
               loading ? (
-                <div className={styles["search__book--skeleton"]}>
+                <div key={book.id} className={styles["search__book--skeleton"]}>
                   <div></div>
                 </div>
               ) : (
-                  <a
-                    key={book.id}
-                    className={styles["search__book--link"]}
-                    href={`/book/${book.id}`}
-                  >
-                    <figure className={styles["book__image--wrapper"]}>
-                      <img
-                        className={styles.book__image}
-                        src={book.imageLink}
-                        alt=""
-                      />
-                    </figure>
-                    <div>
-                      <div className={styles["search__book--title"]}>
-                        {book.title}
-                      </div>
-                      <div className={styles["search__book--author"]}>
-                        {book.author}
-                      </div>
-                      <div className={styles["search__book--duration"]}>
-                        <div className={styles["recommended__book--details"]}>
-                          <div
-                            className={styles["recommnded__book--details-icon"]}
-                          >
-                            <FaPlayCircle />
-                          </div>
-                          <div
-                            className={styles["recommnded__book--details-text"]}
-                          >
-                            03:24
-                          </div>
+                <a
+                  key={book.id}
+                  className={styles["search__book--link"]}
+                  href={`/book/${book.id}`}
+                >
+                  <figure className={styles["book__image--wrapper"]}>
+                    <img
+                      className={styles.book__image}
+                      src={book.imageLink}
+                      alt=""
+                    />
+                  </figure>
+                  <div>
+                    <div className={styles["search__book--title"]}>
+                      {book.title}
+                    </div>
+                    <div className={styles["search__book--author"]}>
+                      {book.author}
+                    </div>
+                    <div className={styles["search__book--duration"]}>
+                      <div className={styles["recommended__book--details"]}>
+                        <div
+                          className={styles["recommnded__book--details-icon"]}
+                        >
+                          <FaPlayCircle />
+                        </div>
+                        <div
+                          className={styles["recommnded__book--details-text"]}
+                        >
+                          03:24
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </div>
+                </a>
               )
             )}
           </div>

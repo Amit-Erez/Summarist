@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 
-export function searchBounce<T>(value: T, delay = 300): T | null {
+export function useSearchBounce<T>(value: T, delay = 300): T | null {
     const [debouncedValue, setDebouncedValue] = useState<T | null>(value);
 
     useEffect(() => {

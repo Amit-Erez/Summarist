@@ -52,8 +52,8 @@ function AuthListener() {
         dispatch(
           setUser({
             uid: user.uid,
-            email: resolvedEmail, 
-            plan: resolvedPlan,  
+            email: resolvedEmail,
+            plan: resolvedPlan,
             isLoggedIn: true,
           })
         );
@@ -63,7 +63,7 @@ function AuthListener() {
           "authUser",
           JSON.stringify({
             uid: user.uid,
-            email: resolvedEmail, 
+            email: resolvedEmail,
             plan: resolvedPlan,
           })
         );
@@ -97,3 +97,18 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     </Provider>
   );
 }
+
+
+
+// This component initializes Redux for the app and mounts global listeners 
+// that keep Redux in sync with external services like Firebase auth and Stripe subscriptions.
+// Even though:
+// * only Redux is technically a “Provider”
+// The file still deserves to be called Providers because it:
+// * provides global app capabilities
+// * not just Redux, but global state synchronization 
+
+
+// -- “Why is auth logic in your providers file?” --
+// Firebase auth lives outside React, so I use a listener component that mounts once at the top of the app 
+// to sync auth state into Redux. Since it needs to run globally and client-side, I mount it inside the Providers wrapper.

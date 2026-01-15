@@ -227,7 +227,7 @@ export default function ChoosePlan() {
                 }}
               >
                 <div className={styles.accordion__title}>
-                  What's included in the Premium plan?
+                  What&apos;s included in the Premium plan?
                 </div>
                 <PiCaretDown
                   className={`${styles.accordion__icon} ${

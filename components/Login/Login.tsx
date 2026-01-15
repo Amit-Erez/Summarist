@@ -93,9 +93,13 @@ export default function Login() {
       );
 
       router.push("/for-you");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Email login failed:", error);
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -118,9 +122,13 @@ export default function Login() {
       );
 
       router.push("/for-you");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Signup failed:", error);
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -134,9 +142,13 @@ export default function Login() {
       await sendPasswordResetEmail(auth, email);
       setError(null);
       setReset(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Password reset failed:", error);
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -158,10 +170,7 @@ export default function Login() {
           <>
             <div className={styles.auth__content}>
               <div className={styles.auth__title}>Log in to Summarist</div>
-              {error && 
-              
-              <div className={styles.auth__error}>{error}</div>
-              }
+              {error && <div className={styles.auth__error}>{error}</div>}
               <button
                 className={`${styles.btn} ${styles["guest__btn--wrapper"]}`}
                 onClick={handleGuestLogin}
@@ -235,7 +244,7 @@ export default function Login() {
                 setError(null);
               }}
             >
-              Don't have an account?
+              Don&apos;t have an account?
             </button>
             <div
               className={styles["auth__close--btn"]}
@@ -258,10 +267,7 @@ export default function Login() {
                   Your reset email has been sent!
                 </div>
               )}
-              {error && 
-              
-              <div className={styles.auth__error}>{error}</div>
-              }
+              {error && <div className={styles.auth__error}>{error}</div>}
               <form className={styles["auth__main--form"]}>
                 <input
                   className={styles["auth__main--input"]}
@@ -308,10 +314,7 @@ export default function Login() {
           <>
             <div className={styles.auth__content}>
               <div className={styles.auth__title}>Sign up to Summarist</div>
-              {error && 
-              
-              <div className={styles.auth__error}>{error}</div>
-              }
+              {error && <div className={styles.auth__error}>{error}</div>}
               <button
                 className={`${styles.btn} ${styles["google__btn--wrapper"]}`}
                 onClick={handleGoogleLogin}
