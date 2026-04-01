@@ -8,12 +8,13 @@
 .for-you__sub--title {
   font-weight: 300;
   color: #394547;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .for-you__recommended--books {
   display: flex;
   overflow: hidden;
+  padding-top: 0.5rem;
   gap: 16px;
   scroll-snap-type: mandatory;
   scroll-snap-type: x;
