@@ -2,11 +2,29 @@ import styles from "./Finished.module.css";
 import BookCard from "../BookCard/BookCard";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
+import { useEffect, useRef } from "react";
 
 export default function Finished() {
+  const galleryRef = useRef<HTMLDivElement | null>(null);
   const finishedBooks = useSelector(
     (state: RootState) => state.finished.finishedBooks
   );
+
+    useEffect(() => {
+      const gallery = galleryRef.current;
+      if (!gallery) return;
+  
+      const handleWheel = (event: WheelEvent) => {
+        event.preventDefault();
+        gallery.scrollLeft += event.deltaY * 0.5;
+      };
+  
+      gallery.addEventListener("wheel", handleWheel, { passive: false });
+  
+      return () => {
+        gallery.removeEventListener("wheel", handleWheel);
+      };
+    }, [finishedBooks.length]);
 
   return (
     <>
@@ -22,9 +40,9 @@ export default function Finished() {
           <div className={styles["finished__books--sub-title"]}>
             When you finish a book, you can find it here later.
           </div>
-        </div>
+        </div> 
       ) : (
-        <div className={styles["for-you__recommended--books"]}>
+        <div className={styles["for-you__finished--books"] } ref={galleryRef}>
           {finishedBooks.map((b) => (
             <BookCard key={b.id} book={b} />
           ))}

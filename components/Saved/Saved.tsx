@@ -4,12 +4,29 @@ import styles from "./Saved.module.css";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import BookCard from "../BookCard/BookCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Saved() {
   const savedBooks = useSelector((state: RootState) => state.saved.savedBooks);
-
+  const galleryRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      gallery.scrollLeft += event.deltaY * 0.5;
+    };
+
+    gallery.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      gallery.removeEventListener("wheel", handleWheel);
+    };
+  }, [mounted, savedBooks.length]);
+
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
@@ -29,7 +46,7 @@ export default function Saved() {
           </div>
         </div>
       ) : (
-        <div className={styles["for-you__recommended--books"]}>
+        <div className={styles["for-you__saved--books"]} ref={galleryRef}>
           {savedBooks.map((b) => (
             <BookCard key={b.id} book={b} />
           ))}
