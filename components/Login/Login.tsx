@@ -31,6 +31,7 @@ export default function Login() {
 
   const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => state.uiLogin.isLoginOpen);
+  const [isClosing, setIsClosing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function Login() {
           email: "amit@summarist.com",
           plan: "premium",
         },
-        dispatch
+        dispatch,
       );
 
       router.push("/for-you");
@@ -71,7 +72,7 @@ export default function Login() {
           email: user.email,
           plan: "basic",
         },
-        dispatch
+        dispatch,
       );
     } catch (error) {
       console.error("Google login failed:", error);
@@ -89,7 +90,7 @@ export default function Login() {
           email: user.email,
           plan: "basic",
         },
-        dispatch
+        dispatch,
       );
 
       router.push("/for-you");
@@ -108,7 +109,7 @@ export default function Login() {
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const user = result.user;
 
@@ -118,7 +119,7 @@ export default function Login() {
           email: user.email,
           plan: "basic",
         },
-        dispatch
+        dispatch,
       );
 
       router.push("/for-you");
@@ -152,20 +153,35 @@ export default function Login() {
     }
   };
 
+  const handleClose = () => {
+    if (isClosing) return;
+
+    setIsClosing(true);
+    setTimeout(() => {
+      dispatch(closeLogin());
+      setMode("login");
+      setReset(false);
+      setError(null);
+      setIsClosing(false);
+    }, 250);
+  };
+
   if (!isOpen) return null;
 
   return (
     <div
-      className={styles.auth__wrapper}
+      className={`${styles.auth__wrapper} ${
+    isClosing ? styles.auth__wrapperClosing : ""
+  }`}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
-          dispatch(closeLogin());
-          setMode("login");
-          setReset(false);
+          handleClose();
         }
       }}
     >
-      <div className={styles.auth}>
+      <div className={`${styles.auth} ${
+    isClosing ? styles.authClosing : ""
+  }`}>
         {mode === "login" && (
           <>
             <div className={styles.auth__content}>
@@ -248,10 +264,9 @@ export default function Login() {
             </button>
             <div
               className={styles["auth__close--btn"]}
-              onClick={() => {
-                dispatch(closeLogin());
-                setMode("login");
-                setError(null);
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
               }}
             >
               <RiCloseLargeFill />
@@ -299,11 +314,9 @@ export default function Login() {
             </button>
             <div
               className={styles["auth__close--btn"]}
-              onClick={() => {
-                dispatch(closeLogin());
-                setMode("login");
-                setReset(false);
-                setError(null);
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
               }}
             >
               <RiCloseLargeFill />
@@ -367,12 +380,10 @@ export default function Login() {
             </button>
             <div
               className={styles["auth__close--btn"]}
-              onClick={() => {
-                dispatch(closeLogin());
-                setMode("login");
-                setError(null);
-              }}
-            >
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}>
               <RiCloseLargeFill />
             </div>
           </>

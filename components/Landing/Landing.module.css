@@ -17,7 +17,8 @@
   height: 40px;
   border-radius: 4px;
   font-size: 16px;
-  transition: background-color 200ms;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,10 +27,13 @@
 
 .btn:hover:not(:disabled) {
   background-color: #20ba68;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  transform: translateY(-1px);
+  font-weight: 500;
 }
 
-.btn:active {
-  transform: translateY(1px);
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 
 .home__cta--btn {
