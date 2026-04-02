@@ -5,6 +5,7 @@ import fontSizeReducer from "@/slices/fontSizeSlice"
 import bookReducer from "@/slices/bookSlice";
 import savedReducer from "@/slices/savedSlice";
 import finishedReducer from "@/slices/finishedSlice";
+import mobileMenuReducer from "@/slices/mobileMenuSlice";
 
 
 export const store = configureStore({
@@ -14,7 +15,8 @@ export const store = configureStore({
         fontSize: fontSizeReducer,
         book: bookReducer,
         saved: savedReducer,
-        finished: finishedReducer
+        finished: finishedReducer,
+        mobileMenu: mobileMenuReducer,
     }
 })
 

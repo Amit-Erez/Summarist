@@ -1,10 +1,14 @@
 "use client";
 import styles from "@/components/Searchbar/Searchbar.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store/store";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { FaPlayCircle } from "react-icons/fa";
+import { GiHamburgerMenu  } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { useSearchBounce } from "@/utilities/searchBounce";
 import { Book } from "@/types/book";
+import { toggleMobileMenu } from "@/slices/mobileMenuSlice";
 
 export default function Searchbar() {
   const [query, setQuery] = useState("");
@@ -12,6 +16,7 @@ export default function Searchbar() {
   const [results, setResults] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
+
 
   useEffect(() => {
     if (!debouncedQuery) {
@@ -36,10 +41,20 @@ export default function Searchbar() {
     fetchData();
   }, [debouncedQuery]);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const handleClick = ():void => {
+    dispatch(toggleMobileMenu());
+  }
+
   return (
     <div className={styles.search__background}>
       <div className={styles.search__wrapper}>
-        <figure></figure>
+        <figure className={styles["hamburger__menu-wrapper"]}>
+          <GiHamburgerMenu
+            className={styles["hamburger__menu"]}
+           onClick={handleClick}
+          />
+        </figure>
         <div className={styles.search__content}>
           <div className={styles.search}>
             <div className={styles["search__input--wrapper"]}>

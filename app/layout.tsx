@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 import Login from "@/components/Login/Login";
 import "./globals.css";
 import Providers from "./providers";
+import MobileMenuModal from "@/components/MobileMenuModal/MobileMenuModal";
 
 export default function RootLayout({
   children,
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body>
         <div className="wrapper wrapper__full">
           <Providers>
+            <MobileMenuModal />
             <Login />
             {children}
           </Providers>
