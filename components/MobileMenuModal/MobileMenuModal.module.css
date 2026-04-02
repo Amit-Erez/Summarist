@@ -57,6 +57,10 @@
   background-color: rgb(80, 80, 80);
 }
 
+.menu__modal-item:active {
+  transform: scale(.97);
+}
+
 .noentry{
     cursor: not-allowed;
 }
