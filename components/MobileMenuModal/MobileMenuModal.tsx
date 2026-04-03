@@ -3,8 +3,7 @@ import React from "react";
 import styles from "@/components/MobileMenuModal/MobileMenuModal.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { RiCloseLargeFill } from "react-icons/ri";
-import {toggleMobileMenu} from "@/slices/mobileMenuSlice";
+import { toggleMobileMenu } from "@/slices/mobileMenuSlice";
 import { useRouter } from "next/navigation";
 import { openLogin } from "@/slices/uiLoginSlice";
 import { clearUser } from "@/slices/userSlice";
@@ -73,13 +72,9 @@ const MobileMenuModal = () => {
         >
           {user.isLoggedIn ? "Logout" : "Login"}
         </li>
+        <li className={`${styles["menu__modal-item"]} ${styles["back"]}`} 
+        onClick={() => dispatch(toggleMobileMenu())}>Back</li>
       </ul>
-      <figure
-        className={styles["menu__modal-close"]}
-        onClick={() => dispatch(toggleMobileMenu())}
-      >
-        <RiCloseLargeFill />
-      </figure>
     </div>
   );
 };

@@ -32,6 +32,11 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  transition: transform 200ms ease;
+}
+
+.features:hover {
+  transform: scale(1.04);
 }
 
 @keyframes fade-in {
@@ -57,6 +62,7 @@
 .features__icon svg {
   width: 60px;
   height: 60px;
+  color: #032b41;
 }
 
 .features__title {
@@ -81,7 +87,7 @@
 
 :global(.statistics__heading) {
   color: #6b757b;
-  animation: pulseJump 15s linear infinite; /* total duration = headings × 1s */
+  animation: pulseJump 12s linear infinite; 
 }
 
 /* apply a stagger (each starts a bit later) */
@@ -89,19 +95,19 @@
   animation-delay: 0s;
 }
 :global(.statistics__heading:nth-child(2)) {
-  animation-delay: 2.5s;
+  animation-delay: 2s;
 }
 :global(.statistics__heading:nth-child(3)) {
-  animation-delay: 5s;
+  animation-delay: 4s;
 }
 :global(.statistics__heading:nth-child(4)) {
-  animation-delay: 7.5s;
+  animation-delay: 6s;
 }
 :global(.statistics__heading:nth-child(5)) {
-  animation-delay: 10s;
+  animation-delay: 8s;
 }
 :global(.statistics__heading:nth-child(6)) {
-  animation-delay: 12.5s;
+  animation-delay: 10s;
 }
 
 @keyframes pulseJump {

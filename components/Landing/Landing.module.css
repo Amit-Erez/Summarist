@@ -48,7 +48,8 @@
 /* LANDING */
 .landing__wrapper {
   display: flex;
-  margin-left: 0;
+  justify-content: space-between;
+  margin-bottom:36px;
   width: 100%;
   animation: fade-in 300ms ease-in; 
 }
@@ -80,11 +81,13 @@
   width: 100%;
   height: 100%;
   max-width: 400px;
+  
 }
+
 
 .landing__content__title {
   color: #032b41;
-  font-size: 40px;
+  font-size: 42px;
   font-weight: bold;
   margin-bottom: 24px;
 }

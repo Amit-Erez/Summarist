@@ -65,7 +65,7 @@
 }
 
 .menu__modal-item:hover {
-  background-color: rgba(80, 80, 80, 0.615);
+  background-color: #325796;
 }
 
 .menu__modal-item:active {
@@ -76,16 +76,12 @@
   cursor: not-allowed;
 }
 
-.menu__modal-close {
-  position: absolute;
-  top: 6rem;
-  right: 7rem;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  transition: all 250ms ease;
+.back {
+  margin-left: 16px;
+  margin-top: 16px;
+  width: 90px;
+  background-color: #5978ae;
 }
 
-.menu__modal-close:hover {
-  transform: scale(1.08);
-}
+
+
